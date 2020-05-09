@@ -75,13 +75,37 @@ userRoutes.post('/login', (req:Request, res:Response)=>{
             })
         })  
     })
+    
 });
-
 //Actualizar usuario
 userRoutes.post('/update',verificaToken, (req:any, res:Response)=>{
-    res.json({
-        ok:true,
-        usuario:req.usuario
+    const user={
+        nombre:req.body.nombre,
+        email:req.body.email,
+        avatar: req.body.avatar
+    }
+
+    Usuario.findByIdAndUpdate(req.usuario._id, user,{new:true},(err,userDB)=>{
+        if(err) throw err;
+
+        if(!userDB){
+            return res.json({
+                ok:false,
+                mensaje:'No existe un usuario con ese Id'
+            })
+        }
+        
+        const tokenUser = Token.getJwtToken({
+            _id:userDB.id,
+            nombre:userDB.nombre || req.usuario.nombre,
+            email: userDB.email || req.usuario.nombre,
+            avatar:userDB.avatar || req.usuario.nombre
+        });
+    
+        res.json({
+            ok:true,
+            token:tokenUser
+        })
     })
 })
 
