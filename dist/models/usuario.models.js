@@ -16,7 +16,8 @@ var usuarioSchema = new mongoose_1.Schema({
     },
     email: {
         type: String,
-        required: [true, 'El email es obligatoria']
+        required: [true, 'El email es obligatoria'],
+        unique: [true, 'El usuario ya existe']
     },
     password: {
         type: String,

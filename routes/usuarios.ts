@@ -1,6 +1,8 @@
 import { Router,Request,Response } from "express";
 import { Usuario } from "../models/usuario.models";
 import bcrypt from 'bcrypt';
+import Token from "../clases/token";
+import { verificaToken } from "../middlewares/autenticacion";
 
 
 
@@ -21,9 +23,17 @@ userRoutes.post('/login', (req:Request, res:Response)=>{
             });
         }
         if (userDB.compararPassword(body.password)){
+
+            const tokenUser = Token.getJwtToken({
+                _id:userDB.id,
+                nombre:userDB.nombre,
+                email: userDB.email,
+                avatar:userDB.avatar
+            });
+
             res.json({
                 ok:true,
-                token:'q4hrffnswsnrgfb sr'
+                token:tokenUser
             });
         }else{
             return res.json({
@@ -44,18 +54,34 @@ userRoutes.post('/login', (req:Request, res:Response)=>{
             avatar: req.body.avatar
         }
     
-    Usuario.create(user).then(userDb=>{
+    Usuario.create(user).then(userDB=>{
 
-        res.json({
-            ok:true,
-            user:userDb
-            })
+            const tokenUser = Token.getJwtToken({
+                _id:userDB.id,
+                nombre:userDB.nombre,
+                email: userDB.email,
+                avatar:userDB.avatar
+            });
+            
+            res.json({
+                ok:true,
+                token:tokenUser
+            });
+
         }).catch (err=>{
             res.json({
                 ok:false,
                 err
             })
         })  
+    })
+});
+
+//Actualizar usuario
+userRoutes.post('/update',verificaToken, (req:any, res:Response)=>{
+    res.json({
+        ok:true,
+        usuario:req.usuario
     })
 })
 

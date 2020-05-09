@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var usuario_models_1 = require("../models/usuario.models");
 var bcrypt_1 = __importDefault(require("bcrypt"));
+var token_1 = __importDefault(require("../clases/token"));
+var autenticacion_1 = require("../middlewares/autenticacion");
 var userRoutes = express_1.Router();
 //LOGIN
 userRoutes.post('/login', function (req, res) {
@@ -20,9 +22,15 @@ userRoutes.post('/login', function (req, res) {
             });
         }
         if (userDB.compararPassword(body.password)) {
+            var tokenUser = token_1.default.getJwtToken({
+                _id: userDB.id,
+                nombre: userDB.nombre,
+                email: userDB.email,
+                avatar: userDB.avatar
+            });
             res.json({
                 ok: true,
-                token: 'q4hrffnswsnrgfb sr'
+                token: tokenUser
             });
         }
         else {
@@ -40,10 +48,16 @@ userRoutes.post('/login', function (req, res) {
             password: bcrypt_1.default.hashSync(req.body.password, 10),
             avatar: req.body.avatar
         };
-        usuario_models_1.Usuario.create(user).then(function (userDb) {
+        usuario_models_1.Usuario.create(user).then(function (userDB) {
+            var tokenUser = token_1.default.getJwtToken({
+                _id: userDB.id,
+                nombre: userDB.nombre,
+                email: userDB.email,
+                avatar: userDB.avatar
+            });
             res.json({
                 ok: true,
-                user: userDb
+                token: tokenUser
             });
         }).catch(function (err) {
             res.json({
@@ -51,6 +65,13 @@ userRoutes.post('/login', function (req, res) {
                 err: err
             });
         });
+    });
+});
+//Actualizar usuario
+userRoutes.post('/update', autenticacion_1.verificaToken, function (req, res) {
+    res.json({
+        ok: true,
+        usuario: req.usuario
     });
 });
 exports.default = userRoutes;
