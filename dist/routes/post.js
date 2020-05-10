@@ -92,30 +92,39 @@ postRoutes.post('/', [autenticacion_1.verificaToken], function (req, res) {
     });
 });
 //Servicio para subir archivos
-postRoutes.post('/upload', [autenticacion_1.verificaToken], function (req, res) {
-    if (!req.files) {
-        return res.status(400).json({
-            ok: false,
-            mensaje: 'No se subió ningún archivo'
-        });
-    }
-    var file = req.files.image;
-    if (!file) {
-        return res.status(400).json({
-            ok: false,
-            mensaje: 'No se subió ningún archivo-image'
-        });
-    }
-    if (!file.mimetype.includes('image')) {
-        return res.status(400).json({
-            ok: false,
-            mensaje: 'Lo que se subió no es una imagen'
-        });
-    }
-    fileSystem.guardarImagenTemporal(file, req.usuario._id);
-    res.json({
-        ok: true,
-        file: file.mimetype
+postRoutes.post('/upload', [autenticacion_1.verificaToken], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var file;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!req.files) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            mensaje: 'No se subió ningún archivo'
+                        })];
+                }
+                file = req.files.image;
+                if (!file) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            mensaje: 'No se subió ningún archivo-image'
+                        })];
+                }
+                if (!file.mimetype.includes('image')) {
+                    return [2 /*return*/, res.status(400).json({
+                            ok: false,
+                            mensaje: 'Lo que se subió no es una imagen'
+                        })];
+                }
+                return [4 /*yield*/, fileSystem.guardarImagenTemporal(file, req.usuario._id)];
+            case 1:
+                _a.sent();
+                res.json({
+                    ok: true,
+                    file: file.mimetype
+                });
+                return [2 /*return*/];
+        }
     });
-});
+}); });
 exports.default = postRoutes;

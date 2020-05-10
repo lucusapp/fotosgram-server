@@ -11,13 +11,24 @@ export default class FileSystem{
     constructor(){ };
 
     guardarImagenTemporal(file:FileUpload,userId:string){
-        //CREAR CARPETAS
-        const path = this.crearCarpetaUsuario(userId)
-        //NOMBRE ARCHIVO
-        const nombreArchivo = this.generarNombreUnico(file.name);
-        console.log(nombreArchivo);
-        console.log(file.name);
-        
+
+        return new Promise((resolve,reject)=>{
+            //CREAR CARPETAS
+            const path = this.crearCarpetaUsuario(userId)
+            //NOMBRE ARCHIVO
+            const nombreArchivo = this.generarNombreUnico(file.name);
+            console.log(nombreArchivo);
+            console.log(file.name);
+            //MOVER DEL ARCHIVO DEL TEMP A NUESTRA CARPETA
+            file.mv(`${path}/${nombreArchivo}`,(err:any)=>{
+                if(err){
+                    reject(err);
+                }else{
+                    resolve()
+                }   
+            })
+        })
+
     
     }
 

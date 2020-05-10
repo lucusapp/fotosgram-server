@@ -11,12 +11,24 @@ var FileSystem = /** @class */ (function () {
     }
     ;
     FileSystem.prototype.guardarImagenTemporal = function (file, userId) {
-        //CREAR CARPETAS
-        var path = this.crearCarpetaUsuario(userId);
-        //NOMBRE ARCHIVO
-        var nombreArchivo = this.generarNombreUnico(file.name);
-        console.log(nombreArchivo);
-        console.log(file.name);
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            //CREAR CARPETAS
+            var path = _this.crearCarpetaUsuario(userId);
+            //NOMBRE ARCHIVO
+            var nombreArchivo = _this.generarNombreUnico(file.name);
+            console.log(nombreArchivo);
+            console.log(file.name);
+            //MOVER DEL ARCHIVO DEL TEMP A NUESTRA CARPETA
+            file.mv(path + "/" + nombreArchivo, function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
     };
     FileSystem.prototype.generarNombreUnico = function (nombreOriginal) {
         var nombreArr = nombreOriginal.split('.');
