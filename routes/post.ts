@@ -2,8 +2,11 @@ import { Router, Response } from "express";
 import { verificaToken } from "../middlewares/autenticacion";
 import { Post } from "../models/post.model";
 import {FileUpload} from "../interfaces/file-upload"
+import FileSystem from "../clases/file-system";
 
 const postRoutes = Router();
+
+const fileSystem = new FileSystem();
 
 
 //Obtener POST paginados
@@ -70,6 +73,9 @@ postRoutes.post('/upload', [verificaToken], (req:any, res:Response)=>{
                 mensaje:'Lo que se subió no es una imagen'
             })
         }
+        
+        fileSystem.guardarImagenTemporal(file,req.usuario._id)
+        
         res.json({
             ok:true,
             file:file.mimetype
