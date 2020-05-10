@@ -7,11 +7,14 @@ var server_1 = __importDefault(require("./clases/server"));
 var usuarios_1 = __importDefault(require("./routes/usuarios"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var body_parser_1 = __importDefault(require("body-parser"));
+var express_fileupload_1 = __importDefault(require("express-fileupload"));
 var post_1 = __importDefault(require("./routes/post"));
 var server = new server_1.default();
 // BodyParser
 server.app.use(body_parser_1.default.urlencoded({ extended: true }));
 server.app.use(body_parser_1.default.json());
+//FileUpload
+server.app.use(express_fileupload_1.default());
 //Rutas de mi aplicación
 server.app.use('/user', usuarios_1.default);
 server.app.use('/posts', post_1.default);
