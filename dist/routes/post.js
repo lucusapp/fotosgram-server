@@ -129,4 +129,10 @@ postRoutes.post('/upload', [autenticacion_1.verificaToken], function (req, res) 
         }
     });
 }); });
+postRoutes.get('/imagen/:userid/:img', function (req, res) {
+    var userId = req.params.userid;
+    var img = req.params.img;
+    var pathFoto = fileSystem.getFotoUrl(userId, img);
+    res.sendFile(pathFoto);
+});
 exports.default = postRoutes;
