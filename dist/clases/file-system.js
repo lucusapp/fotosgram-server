@@ -47,6 +47,26 @@ var FileSystem = /** @class */ (function () {
         }
         return pathUserTemp;
     };
+    FileSystem.prototype.imagenesDeTempHaciaPost = function (userId) {
+        var pathTemp = path_1.default.resolve(__dirname, '../uploads', userId, 'temp');
+        var pathPosts = path_1.default.resolve(__dirname, '../uploads', userId, 'posts');
+        if (!fs_1.default.existsSync(pathTemp)) {
+            return [];
+        }
+        if (!fs_1.default.existsSync(pathPosts)) {
+            fs_1.default.mkdirSync(pathPosts);
+        }
+        //mover del directorio Temp al directorio Post
+        var imagenesTemp = this.obtenerImagenesEnTemp(userId);
+        imagenesTemp.forEach(function (imagen) {
+            fs_1.default.renameSync(pathTemp + "/" + imagen, pathPosts + "/" + imagen);
+        });
+        return imagenesTemp;
+    };
+    FileSystem.prototype.obtenerImagenesEnTemp = function (userId) {
+        var pathTemp = path_1.default.resolve(__dirname, '../uploads/', userId, 'temp');
+        return fs_1.default.readdirSync(pathTemp) || [];
+    };
     return FileSystem;
 }());
 exports.default = FileSystem;

@@ -74,6 +74,8 @@ postRoutes.get('/', function (req, res) { return __awaiter(void 0, void 0, void 
 postRoutes.post('/', [autenticacion_1.verificaToken], function (req, res) {
     var body = req.body;
     body.usuario = req.usuario._id;
+    var imagenes = fileSystem.imagenesDeTempHaciaPost(req.usuario._id);
+    body.imgs = imagenes;
     post_model_1.Post.create(body).then(function (postDB) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
