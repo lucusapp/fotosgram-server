@@ -35,11 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var autenticacion_1 = require("../middlewares/autenticacion");
 var post_model_1 = require("../models/post.model");
+var file_system_1 = __importDefault(require("../clases/file-system"));
 var postRoutes = express_1.Router();
+var fileSystem = new file_system_1.default();
 //Obtener POST paginados
 postRoutes.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var pagina, skip, posts;
@@ -107,6 +112,7 @@ postRoutes.post('/upload', [autenticacion_1.verificaToken], function (req, res) 
             mensaje: 'Lo que se subió no es una imagen'
         });
     }
+    fileSystem.guardarImagenTemporal(file, req.usuario._id);
     res.json({
         ok: true,
         file: file.mimetype
