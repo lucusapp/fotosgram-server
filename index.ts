@@ -1,6 +1,7 @@
 import Server from "./clases/server";
 import userRoutes from "./routes/usuarios";
 import mongoose from 'mongoose';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import postRoutes from "./routes/post";
@@ -14,6 +15,9 @@ server.app.use(bodyParser.json())
 //FileUpload
 server.app.use(fileUpload())
 
+//Configurar CORS
+server.app.use(cors({origin:true, credentials:true}));
+
 //Rutas de mi aplicación
 server.app.use('/user', userRoutes)
 server.app.use('/posts', postRoutes)
@@ -21,7 +25,7 @@ server.app.use('/posts', postRoutes)
 
 //Conectar Db
 mongoose.connect('mongodb://localhost:27017/fotosgram',
-                { useNewUrlParser: true, useCreateIndex:true},(err)=>{
+                { useNewUrlParser: true, useCreateIndex:true,useUnifiedTopology: true},(err)=>{
      if(err) throw err;
      console.log('base de datos online');
                     
